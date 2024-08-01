@@ -5,25 +5,29 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
-class WebViewContainer extends StatefulWidget {
-  const WebViewContainer({Key? key}) : super(key: key);
+class WebPage extends StatefulWidget {
+  String websiteLink;
+  WebPage(this.websiteLink, {Key? key}) : super(key: key);
 
   @override
-  _WebViewContainerState createState() => _WebViewContainerState();
+  _WebPageState createState() => _WebPageState();
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _WebPageState extends State<WebPage> {
   late final WebViewController controller;
 
-  _WebViewContainerState();
+  _WebPageState();
 
   @override
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse('https://tally.so/r/3qP8lO'));
+      ..loadRequest(Uri.parse(widget.websiteLink));
+
     //run below listener to overide webview's setonshowfileselector
     addFileSelectionListener();
+    controller.clearCache();
+    controller.clearLocalStorage();
     super.initState();
   }
 
@@ -52,7 +56,15 @@ class _WebViewContainerState extends State<WebViewContainer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("webview container"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            controller.clearCache();
+            controller.clearLocalStorage();
+
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: WebViewWidget(controller: controller),
     );

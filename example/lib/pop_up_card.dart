@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'theme_constants.dart';
-import 'pages/home_page.dart';
+import 'pages/writing_type_page.dart';
 import 'pages/qr_scanner_page.dart';
 
 class PopUpCard extends StatelessWidget {
   final bool scanSuccess;
+  final String qrCode;
 
-  const PopUpCard(this.scanSuccess, {Key? key}) : super(key: key);
+  const PopUpCard(this.scanSuccess, this.qrCode, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +33,15 @@ class PopUpCard extends StatelessWidget {
           width: 100, height: 100, color: grassGreen),
       SizedBox(height: 15),
       Text("識別成功!", style: TextStyle(fontSize: 22, color: Color(0xFF171A1F))),
-      SizedBox(height: 60),
+      Text(qrCode),
+      SizedBox(height: 10),
       ElevatedButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pop(context);
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+              MaterialPageRoute(builder: (context) => WritingTypePage(qrCode)),
+            ).then((_) {});
           },
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(
@@ -55,16 +58,14 @@ class PopUpCard extends StatelessWidget {
           width: 100, height: 100, color: lightRed),
       SizedBox(height: 15),
       Text("識別失敗!", style: TextStyle(fontSize: 22, color: Color(0xFF171A1F))),
-      SizedBox(height: 25),
+      SizedBox(height: 15),
+      Text(qrCode),
       Text("請將盡頭正對二維碼並重新掃描",
           style: TextStyle(fontSize: 14, color: Color(0xFF9095A1))),
-      SizedBox(height: 30),
+      SizedBox(height: 10),
       ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => QRScannerPage()),
-            );
+            Navigator.pop(context);
           },
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(

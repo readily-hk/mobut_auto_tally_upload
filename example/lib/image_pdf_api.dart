@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
-import '/save_and_open_pdf.dart';
+import '/save_pdf.dart';
 import 'dart:typed_data';
 import 'dart:async';
 
@@ -49,6 +49,6 @@ class ImagePdfApi {
       );
     }
 
-    return SaveAndOpenDocument.savePdf(name: 'image_pdf.pdf', pdf: pdf);
+    return SaveDocument.savePdf(name: 'image_pdf.pdf', pdf: pdf);
   }
 }

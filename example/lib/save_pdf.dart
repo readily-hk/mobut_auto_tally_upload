@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:open_filex/open_filex.dart';
 
-class SaveAndOpenDocument {
+class SaveDocument {
   static Future<File> savePdf({
     required String name,
     required Document pdf,
@@ -16,7 +16,6 @@ class SaveAndOpenDocument {
     final file = File('${root!.path}/$name');
     await file.writeAsBytes(await pdf.save());
     debugPrint('${root.path}/$name');
-    OpenFilex.open('${root!.path}/$name');
     return file;
   }
 }

@@ -6,7 +6,7 @@ description: Demonstrates how to use the cunning_document_scanner plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.15.1 <4.0.0"
+  sdk: ">=2.17.1 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -44,6 +44,7 @@ dependencies:
   webview_flutter: ^4.8.0
   webview_flutter_android: ^3.16.5
   webview_flutter_platform_interface: ^2.10.0
+  syncfusion_flutter_pdfviewer: ^26.2.7
 
 dev_dependencies:
   flutter_test:

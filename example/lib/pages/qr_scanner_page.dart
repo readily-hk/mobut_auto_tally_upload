@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'home_page.dart';
+import '../pop_up_card.dart';
 
 class QRScannerPage extends StatefulWidget {
   const QRScannerPage({Key? key}) : super(key: key);
@@ -9,7 +9,8 @@ class QRScannerPage extends StatefulWidget {
   State<QRScannerPage> createState() => _QRScannerPageState();
 }
 
-class _QRScannerPageState extends State<QRScannerPage> {
+class _QRScannerPageState extends State<QRScannerPage>
+    with WidgetsBindingObserver {
   bool _screenOpened = false;
   MobileScannerController cameraController = MobileScannerController(
       detectionSpeed: DetectionSpeed.normal, returnImage: true);
@@ -17,8 +18,8 @@ class _QRScannerPageState extends State<QRScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("QR Scanner")),
-        backgroundColor: Colors.black.withOpacity(0.5),
+        appBar: AppBar(title: Text("QR Scanner"), leading: Container()),
+        backgroundColor: Colors.green.withOpacity(0.1),
         body: Container(
             width: double.infinity,
             padding: EdgeInsets.all(16),
@@ -28,7 +29,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                    Text("將二維碼置於框中",
+                    Text("將作文二維碼置於框中",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -51,20 +52,28 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   void _foundBarcode(BarcodeCapture capture) {
     if (!_screenOpened) {
-      final List<Barcode> barcodes = capture.barcodes;
+      List<Barcode> barcodes = capture.barcodes;
+      _screenOpened = true;
+      String code = barcodes[0].rawValue ?? "___";
+      barcodes = [];
 
-      for (final barcode in barcodes) {
-        String code = barcode.rawValue ?? "___";
-
-        // Navigate to a new page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
-
-        _screenOpened = true;
+      if (code.contains("student.mo-but.com")) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PopUpCard(true, code);
+            }).then((_) {
+          _screenOpened = false;
+        });
+      } else {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return PopUpCard(false, code);
+            }).then((_) {
+          _screenOpened = false;
+        });
       }
     }
   }

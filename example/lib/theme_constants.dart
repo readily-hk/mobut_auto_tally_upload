@@ -9,3 +9,15 @@ ThemeData theme = ThemeData(
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF000000))),
     ));
+
+Container backgroundWidget() {
+  return Container(
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/icons/background.png'),
+        fit: BoxFit.cover, // Cover the whole container
+        alignment: Alignment.bottomCenter, // Center the image
+      ),
+    ),
+  );
+}
