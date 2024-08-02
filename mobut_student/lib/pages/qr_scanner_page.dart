@@ -52,6 +52,9 @@ class _QRScannerPageState extends State<QRScannerPage>
     _screenOpened = false;
   }
 
+  //some qr code generator cannot generate a qr code that encoded the website correctly
+  //bad ar code generator will cause the the webview to fail to recognize afterfix "?example"
+  //https://www.the-qrcode-generator.com/  this is an example of qr code generator that works
   void _foundBarcode(BarcodeCapture capture) {
     if (!_screenOpened) {
       List<Barcode> barcodes = capture.barcodes;
@@ -64,6 +67,14 @@ class _QRScannerPageState extends State<QRScannerPage>
           context,
           MaterialPageRoute(builder: (context) => WritingTypePage(code)),
         ).then((_) {});
+
+        // showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return PopUpCard(true, code);
+        //     }).then((_) {
+        //   _screenOpened = false;
+        //});
       } else {
         showDialog(
             context: context,

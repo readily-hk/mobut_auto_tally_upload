@@ -97,7 +97,7 @@ changeReactCheckboxValue(checkboxElement, true);
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(widget.websiteLink))
+      ..loadRequest(Uri.parse(widget.websiteLink + "?format=hand_writing"))
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (String url) {

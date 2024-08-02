@@ -22,7 +22,7 @@ class _WebPageState extends State<WebPage> {
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(widget.websiteLink));
+      ..loadRequest(Uri.parse(widget.websiteLink + "?format=computer"));
 
     //run below listener to overide webview's setonshowfileselector
     addFileSelectionListener();
