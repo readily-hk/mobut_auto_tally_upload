@@ -4,6 +4,7 @@ import '../theme_constants.dart';
 import 'scan_notice_page.dart';
 import 'web_page.dart';
 import 'qr_scanner_page.dart';
+import 'web_local_file_page.dart';
 
 class WritingTypePage extends StatelessWidget {
   String websiteLink;
@@ -38,30 +39,39 @@ class WritingTypePage extends StatelessWidget {
                 const SizedBox(height: 25),
                 const Text("选择适用的文章类型",
                     style: TextStyle(fontSize: 14, color: Color(0xFF9095A1))),
-                const SizedBox(height: 65),
-                writingTypeCard("手寫字", "轻松掃描写作原稿纸",
-                    'assets/icons/attribution-pen.svg', true, context),
-                const SizedBox(height: 27),
+                const SizedBox(height: 35),
                 writingTypeCard("電腦字", "输入或复制粘贴文章", 'assets/icons/computer.svg',
-                    false, context),
+                    "computer-text", context),
+                const SizedBox(height: 15),
+                writingTypeCard("手寫字-掃描", "轻松掃描写作原稿纸",
+                    'assets/icons/attribution-pen.svg', "scan", context),
+                const SizedBox(height: 15),
+                writingTypeCard("手寫字-選取本地文件", "選擇已掃描的本地文件",
+                    'assets/icons/attribution-pen.svg', "local-file", context),
               ]))
         ]));
   }
 
   GestureDetector writingTypeCard(String title, String description,
-      String iconName, bool isHandWriting, BuildContext context) {
+      String iconName, String submitType, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isHandWriting) {
+        if (submitType == "scan") {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ScanNoticePage(websiteLink)),
           );
-        } else {
+        } else if (submitType == "computer-text") {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WebPage(websiteLink)),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WebLocalFilePage(websiteLink)),
           );
         }
       },
