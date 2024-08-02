@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
@@ -44,10 +46,10 @@ class _WebViewPdfContainerState extends State<WebViewPdfContainer> {
   document.querySelector('.sc-6663af1f-1.gWsJwX').click();
 
   document.addEventListener('DOMContentLoaded', function () {
-    
+
     document.querySelector('button').addEventListener('click', int)
 });
-  
+
 function int() {
     console.log('calling');
     document.querySelector('.sc-6663af1f-1.gWsJwX').click();
@@ -95,14 +97,55 @@ changeReactCheckboxValue(checkboxElement, true);
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(
-          'https://student.mo-but.com/?key=ea27c933-6f55-4678-b610-055b0910792d'));
+      ..loadRequest(Uri.parse(widget.websiteLink))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            _injectFileUploadJS();
+          },
+        ),
+      );
     //run below listener to overide webview's setonshowfileselector
     addFileSelectionListener();
 
     controller.clearCache();
     controller.clearLocalStorage();
     super.initState();
+  }
+
+  void _injectFileUploadJS() {
+    final jsCode = '''
+      function uploadFile(fileData, fileName) {
+        var fileInput = document.querySelector('input[type="file"]');
+        if (!fileInput) {
+          console.error('File input not found');
+          return;
+        }
+
+        var dataTransfer = new DataTransfer();
+        var file = new File([fileData], fileName, {type: 'application/pdf'});
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+
+        var event = new Event('change', { bubbles: true });
+        fileInput.dispatchEvent(event);
+      }
+    ''';
+
+    controller.runJavaScript(jsCode);
+  }
+
+  Future<void> _uploadFile() async {
+    final bytes = await widget.pdf.readAsBytes();
+    final base64 = base64Encode(bytes);
+    final fileName = widget.pdf.path.split('/').last;
+
+    final uploadJS = '''
+      var fileData = Uint8Array.from(atob('$base64'), c => c.charCodeAt(0));
+      uploadFile(fileData, '$fileName');
+    ''';
+
+    await controller.runJavaScript(uploadJS);
   }
 
   void addFileSelectionListener() async {
@@ -117,31 +160,46 @@ changeReactCheckboxValue(checkboxElement, true);
 
   //The FileSelectorParams object is a parameter that is passed automatically by the webview controller when invoking the file selection callback function. It contains information about the file selection event, such as accepted file types, multiple file selection support, etc.
   Future<List<String>> _androidFilePicker(FileSelectorParams params) async {
-    //final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles();
     final file = pdf;
 
     return [file.uri.toString()];
+
+    // final result = await FilePicker.platform.pickFiles();
+
+    // if (result != null && result.files.single.path != null) {
+    //   final file = File(result.files.single.path!);
+    //   return [file.uri.toString()];
+    // }
+    // return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              controller.clearCache();
-              controller.clearLocalStorage();
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            controller.clearCache();
+            controller.clearLocalStorage();
 
-              Navigator.of(context).pop();
-            },
-          ),
+            Navigator.of(context).pop();
+          },
         ),
-        body: WebViewWidget(controller: controller),
-        floatingActionButton: FloatingActionButton(
-            child: Text("Autofill"),
-            onPressed: () async {
-              controller.runJavaScript(autoUploadJavaScript);
-            }));
+      ),
+      body: WebViewWidget(controller: controller),
+      floatingActionButton: FloatingActionButton(
+        child: Text("Upload"),
+        onPressed: _uploadFile,
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //     child: Text("Autofill"),
+      //     onPressed: () async {
+      //       controller.runJavaScript(autoFillJavaScript);
+      //     })
+    );
   }
 }
+
+

@@ -8,7 +8,14 @@ class SaveDocument {
     required String name,
     required Document pdf,
   }) async {
-    final root = await getExternalStorageDirectory();
+    dynamic root;
+    if (Platform.isAndroid){
+      root = await getExternalStorageDirectory();
+    }
+    else{
+      root = await getApplicationDocumentsDirectory();
+    }
+    
     final file = File('${root!.path}/$name');
     await file.writeAsBytes(await pdf.save());
     debugPrint('${root.path}/$name');
