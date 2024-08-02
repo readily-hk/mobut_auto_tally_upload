@@ -64,14 +64,6 @@ class _QRScannerPageState extends State<QRScannerPage>
           context,
           MaterialPageRoute(builder: (context) => WritingTypePage(code)),
         ).then((_) {});
-
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return PopUpCard(true, code);
-        //     }).then((_) {
-        //   _screenOpened = false;
-        // });
       } else {
         showDialog(
             context: context,

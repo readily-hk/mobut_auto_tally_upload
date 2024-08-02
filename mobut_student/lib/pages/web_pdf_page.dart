@@ -160,7 +160,6 @@ changeReactCheckboxValue(checkboxElement, true);
 
   //The FileSelectorParams object is a parameter that is passed automatically by the webview controller when invoking the file selection callback function. It contains information about the file selection event, such as accepted file types, multiple file selection support, etc.
   Future<List<String>> _androidFilePicker(FileSelectorParams params) async {
-    final result = await FilePicker.platform.pickFiles();
     final file = pdf;
 
     return [file.uri.toString()];
@@ -201,5 +200,3 @@ changeReactCheckboxValue(checkboxElement, true);
     );
   }
 }
-
-
