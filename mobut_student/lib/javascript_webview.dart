@@ -1,5 +1,4 @@
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 //determine whether the user submitted the form based on whether the submit button exist
 //if there is a submit button, then the user is still filling the form

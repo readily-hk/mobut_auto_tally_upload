@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
+import '../javascript_webview.dart';
 import '../theme_constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -21,43 +22,7 @@ class WebViewPdfContainer extends StatefulWidget {
 class _WebViewPdfContainerState extends State<WebViewPdfContainer> {
   late final WebViewController controller;
   final File pdf;
-  bool _showFab = false;
-
-//issue with file upload: user have to manually touch anywhere of the page, and then auto file upload works
-//why???
-//document.querySelector('button[aria-label="Register"]').click(); code for automating register
-  String autoFillJavaScript = '''
-  document.querySelector('.sc-6663af1f-1.gvjUuC').click();
-
-  function changeReactInputValue(inputDom,newText){
-	  let lastValue = inputDom.value;
-	  inputDom.value = newText;
-	  let event = new Event('input', { bubbles: true });
-	  event.simulated = true;
-	  let tracker = inputDom._valueTracker;
-	  if (tracker) {
-  	  tracker.setValue(lastValue);
-	  }
-	  inputDom.dispatchEvent(event);
-  }
-
-  var userIdDom = document.getElementById("dd2bd7d8-4274-42b8-b7b7-6a3bc527ca47");
-  changeReactInputValue(userIdDom,'username');
-''';
-
-  String autoUploadJavaScript = '''
-  document.querySelector('.sc-6663af1f-1.gWsJwX').click();
-
-  document.addEventListener('DOMContentLoaded', function () {
-
-    document.querySelector('button').addEventListener('click', int)
-});
-
-function int() {
-    console.log('calling');
-    document.querySelector('.sc-6663af1f-1.gWsJwX').click();
-}
-''';
+  bool _isFormFillingPage = true;
 
   _WebViewPdfContainerState(this.pdf);
 
@@ -66,11 +31,11 @@ function int() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel(
-        'flutter_inappwebview',
-        onMessageReceived: (message) {
-          if (message.message == 'showFloatingActionButton') {
+        'FlutterChannel',
+        onMessageReceived: (JavaScriptMessage message) {
+          if (message.message == 'newPageDetected') {
             setState(() {
-              _showFab = true;
+              _isFormFillingPage = false;
             });
           }
         },
@@ -80,7 +45,7 @@ function int() {
         NavigationDelegate(
           onPageFinished: (String url) {
             _injectFileUploadJS();
-            _injectButtonClickListenerJS();
+            injectNewPageDetectionJS(controller);
           },
         ),
       );
@@ -142,63 +107,34 @@ function int() {
     final file = pdf;
 
     return [file.uri.toString()];
-
-    // final result = await FilePicker.platform.pickFiles();
-
-    // if (result != null && result.files.single.path != null) {
-    //   final file = File(result.files.single.path!);
-    //   return [file.uri.toString()];
-    // }
-    // return [];
-  }
-
-  void _injectButtonClickListenerJS() {
-    final jsCode = '''
-    document.addEventListener('DOMContentLoaded', function () {
-      var targetButton = document.querySelector('button[type="submit"][value="提交"][aria-label="提交"].sc-bb5db573-1.dCJoOn');
-      if (targetButton) {
-        targetButton.addEventListener('click', function() {
-          window.flutter_inappwebview.callHandler('showFloatingActionButton');
-        });
-      } else {
-        console.error('Target button not found');
-      }
-    });
-  ''';
-
-    controller.runJavaScript(jsCode);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            controller.clearCache();
-            controller.clearLocalStorage();
+      appBar: _isFormFillingPage
+          ? AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  controller.clearCache();
+                  controller.clearLocalStorage();
 
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: WebViewWidget(controller: controller),
-      floatingActionButton: _showFab
-          ? FloatingActionButton.extended(
-              label: Text("回主界面"),
-              icon: Icon(Icons.upload_file),
-              foregroundColor: Colors.white,
-              backgroundColor: grassGreen,
-              onPressed: _uploadFile,
+                  Navigator.of(context).pop();
+                },
+              ),
             )
-          : FloatingActionButton.extended(
+          : null,
+      body: WebViewWidget(controller: controller),
+      floatingActionButton: _isFormFillingPage
+          ? FloatingActionButton.extended(
               label: Text("點擊以自動上載作文"),
               icon: Icon(Icons.upload_file),
               foregroundColor: Colors.white,
               backgroundColor: grassGreen,
               onPressed: _uploadFile,
-            ),
+            )
+          : backToQrScannerButton(context),
     );
   }
 }

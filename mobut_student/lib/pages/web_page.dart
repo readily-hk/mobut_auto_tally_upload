@@ -82,12 +82,8 @@ class _WebPageState extends State<WebPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _isFormFillingPage
             ? null
-            : Stack(children: [
-                Positioned(
-                    bottom: 150,
-                    left: 60,
-                    right: 60,
-                    child: backToQrScannerButton(context))
-              ]));
+            : backToQrScannerButton(context));
   }
+
+  
 }

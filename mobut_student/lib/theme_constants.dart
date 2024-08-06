@@ -55,7 +55,17 @@ Container cardContentLayout(String iconName, String title, String description) {
   );
 }
 
-FloatingActionButton backToQrScannerButton(BuildContext context) {
+Stack backToQrScannerButton(BuildContext context) {
+  return Stack(children: [
+    Positioned(
+        bottom: 150,
+        left: 60,
+        right: 60,
+        child: backToQrScannerButtonContent(context))
+  ]);
+}
+
+FloatingActionButton backToQrScannerButtonContent(BuildContext context) {
   return FloatingActionButton.extended(
     label: Text("重新掃描二維碼,提交另一篇作文"),
     icon: Icon(Icons.qr_code_scanner),
