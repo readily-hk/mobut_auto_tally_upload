@@ -126,6 +126,9 @@ class _WebViewPdfContainerState extends State<WebViewPdfContainer> {
             )
           : null,
       body: WebViewWidget(controller: controller),
+      floatingActionButtonLocation: _isFormFillingPage
+          ? FloatingActionButtonLocation.endFloat
+          : FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _isFormFillingPage
           ? FloatingActionButton.extended(
               label: Text("點擊以自動上載作文"),
