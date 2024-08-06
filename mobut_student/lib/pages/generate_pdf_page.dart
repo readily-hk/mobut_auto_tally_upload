@@ -30,18 +30,13 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
                 const Text("確認已掃描作文",
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 25),
-                const Divider(),
                 const SizedBox(height: 30),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   RichText(
                     text: new TextSpan(
                       // Note: Styles for TextSpans must be explicitly defined.
                       // Child text spans will inherit styles from parent
-                      style: new TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                      style: new TextStyle(fontSize: 15.0, color: Colors.black),
                       children: <TextSpan>[
                         new TextSpan(
                             text:
@@ -56,6 +51,8 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
                     ),
                   ),
                   SizedBox(height: 20),
+                  const Divider(),
+                  SizedBox(height: 20),
                   Text(
                     "文章預覽",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -69,7 +66,7 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
             ),
           ),
           Positioned(
-            bottom: 40,
+            bottom: 20,
             left: 30,
             right: 30,
             child: Container(width: 200, child: nextStepButton(context)),

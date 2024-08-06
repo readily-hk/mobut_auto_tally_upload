@@ -51,10 +51,8 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                       text: new TextSpan(
                         // Note: Styles for TextSpans must be explicitly defined.
                         // Child text spans will inherit styles from parent
-                        style: new TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                        style:
+                            new TextStyle(fontSize: 15.0, color: Colors.black),
                         children: <TextSpan>[
                           new TextSpan(
                               text: '1️⃣   請依次序掃描每頁原稿紙，確保所有文字水平對齊、清晰可辨\n\n2️⃣'),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
+import '../theme_constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
@@ -188,15 +190,13 @@ changeReactCheckboxValue(checkboxElement, true);
         ),
       ),
       body: WebViewWidget(controller: controller),
-      floatingActionButton: FloatingActionButton(
-        child: Text("Upload"),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("點擊以自動上載作文"),
+        icon: Icon(Icons.upload_file),
+        foregroundColor: Colors.white,
+        backgroundColor: grassGreen,
         onPressed: _uploadFile,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //     child: Text("Autofill"),
-      //     onPressed: () async {
-      //       controller.runJavaScript(autoFillJavaScript);
-      //     })
     );
   }
 }
