@@ -49,6 +49,7 @@ class ImagePdfApi {
       );
     }
 
-    return SaveDocument.savePdf(name: 'image_pdf.pdf', pdf: pdf);
+    //test 
+    return SaveDocument.savePdf(name: 'auto_uploaded_pdf.pdf', pdf: pdf);
   }
 }

@@ -32,7 +32,7 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                 SvgPicture.asset('assets/icons/square-info.svg',
                     width: 100, height: 100, color: const Color(0xFF11ad8f)),
                 const SizedBox(height: 10),
-                const Text("注意事项",
+                const Text("掃描前需知",
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 25),
@@ -44,19 +44,31 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                 const SizedBox(height: 25),
                 const Divider(),
                 const SizedBox(height: 35),
-                const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "1. 【極重要】裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: new TextSpan(
+                        // Note: Styles for TextSpans must be explicitly defined.
+                        // Child text spans will inherit styles from parent
+                        style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                        children: <TextSpan>[
+                          new TextSpan(
+                              text: '1️⃣   請依次序掃描每頁原稿紙，確保所有文字水平對齊、清晰可辨\n\n2️⃣'),
+                          new TextSpan(
+                              text: '【極重要】',
+                              style: new TextStyle(color: Colors.red)),
+                          new TextSpan(
+                              text:
+                                  '裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字'),
+                        ],
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        "2.  小心檢查 PDF 是否已經包含作文的所有頁面",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ]),
+                    )
+                  ],
+                ),
                 const SizedBox(height: 65),
                 startScanButton()
               ]))

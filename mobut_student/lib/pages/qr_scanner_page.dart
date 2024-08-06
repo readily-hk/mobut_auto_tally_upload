@@ -21,7 +21,7 @@ class _QRScannerPageState extends State<QRScannerPage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text("作文二維碼掃描"), leading: Container()),
-        backgroundColor: Colors.green.withOpacity(0.1),
+        backgroundColor: Color(0xFFfaf9fa),
         body: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),

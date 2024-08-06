@@ -57,10 +57,10 @@ class PopUpCard extends StatelessWidget {
       SvgPicture.asset('assets/icons/circle-xmark.svg',
           width: 100, height: 100, color: lightRed),
       const SizedBox(height: 15),
-      const Text("識別失敗!",
+      const Text("掃描失敗!",
           style: TextStyle(fontSize: 22, color: Color(0xFF171A1F))),
       const SizedBox(height: 15),
-      const Text("請將盡頭正對二維碼並重新掃描",
+      const Text("請按以下按鈕重新掃描",
           style: TextStyle(fontSize: 14, color: Color(0xFF9095A1))),
       const SizedBox(height: 30),
       ElevatedButton(
