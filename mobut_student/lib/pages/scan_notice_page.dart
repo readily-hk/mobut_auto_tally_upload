@@ -55,19 +55,22 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                             new TextStyle(fontSize: 15.0, color: Colors.black),
                         children: <TextSpan>[
                           new TextSpan(
-                              text: '1️⃣   請依次序掃描每頁原稿紙，確保所有文字水平對齊、清晰可辨\n\n2️⃣'),
+                              text: '1️⃣  請依次序掃描每頁原稿紙，確保所有文字水平對齊、清晰可辨\n\n2️⃣'),
                           new TextSpan(
                               text: '【極重要】',
                               style: new TextStyle(color: Colors.red)),
                           new TextSpan(
                               text:
                                   '請裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字'),
+                          new TextSpan(
+                              text:
+                                  '\n\n3️⃣ 逐一掃描餘下原稿紙後，點擊「節選器」，選取「灰階」及「陰影」模式，按「全部套用」后按「套用」，以獲得最佳掃描效果。'),
                         ],
                       ),
                     )
                   ],
                 ),
-                const SizedBox(height: 65),
+                const SizedBox(height: 35),
                 startScanButton()
               ]))
         ]));
