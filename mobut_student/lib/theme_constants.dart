@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'pages/qr_scanner_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 Color grassGreen = Color(0xFF5F9F6D);
@@ -52,6 +52,21 @@ Container cardContentLayout(String iconName, String title, String description) {
         ),
       )
     ]),
+  );
+}
+
+FloatingActionButton backToQrScannerButton(BuildContext context) {
+  return FloatingActionButton.extended(
+    label: Text("重新掃描二維碼,提交另一篇作文"),
+    icon: Icon(Icons.qr_code_scanner),
+    foregroundColor: Colors.white,
+    backgroundColor: grassGreen,
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => QRScannerPage()),
+      );
+    },
   );
 }
 

@@ -23,31 +23,50 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
         body: Stack(children: [
           backgroundWidget(),
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(30),
             child: SingleChildScrollView(
-                child: Column(children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text("注意事项",
+              child: Column(children: [
+                const SizedBox(height: 10),
+                const Text("確認已掃描作文",
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 20),
-                const Text(
-                  "1. 【極重要】裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字",
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "2.  小心檢查 PDF 是否已經包含作文的所有頁面",
-                ),
-                const SizedBox(height: 20),
-                for (var picture in widget.picturesPath)
-                  Image.file(File(picture)),
-                const SizedBox(height: 65),
+                const SizedBox(height: 30),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  RichText(
+                    text: new TextSpan(
+                      // Note: Styles for TextSpans must be explicitly defined.
+                      // Child text spans will inherit styles from parent
+                      style: new TextStyle(fontSize: 15.0, color: Colors.black),
+                      children: <TextSpan>[
+                        new TextSpan(
+                            text:
+                                '1️⃣   檢查下例文章預覽的頁數順序是否正確排列\n\n2️⃣   文字對齊並清晰可見\n\n3️⃣'),
+                        new TextSpan(
+                            text: '【極重要】',
+                            style: new TextStyle(color: Colors.red)),
+                        new TextSpan(
+                            text:
+                                '請確保已裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  const Divider(),
+                  SizedBox(height: 20),
+                  Text(
+                    "文章預覽",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  for (var picture in widget.picturesPath)
+                    Image.file(File(picture)),
+                  const SizedBox(height: 65),
+                ]),
               ]),
-              const SizedBox(height: 20),
-            ])),
+            ),
           ),
           Positioned(
-            bottom: 40,
+            bottom: 20,
             left: 30,
             right: 30,
             child: Container(width: 200, child: nextStepButton(context)),
@@ -71,7 +90,7 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
         minimumSize: MaterialStateProperty.all(
             const Size(200, 45)), // Set width and height of the button
       ),
-      child: const Text("下一步",
+      child: const Text("確認",
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
     );
   }

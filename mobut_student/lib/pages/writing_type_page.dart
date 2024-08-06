@@ -17,8 +17,6 @@ class WritingTypePage extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              // Custom navigation logic here
-              // For example, navigate to a specific page instead of going back
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const QRScannerPage()));
             },
@@ -40,13 +38,13 @@ class WritingTypePage extends StatelessWidget {
                 const Text("选择适用的文章类型",
                     style: TextStyle(fontSize: 14, color: Color(0xFF9095A1))),
                 const SizedBox(height: 35),
-                writingTypeCard("電腦字", "输入或复制粘贴文章", 'assets/icons/computer.svg',
+                writingTypeCard("電腦字", "電腦輸入文章", 'assets/icons/computer.svg',
                     "computer-text", context),
                 const SizedBox(height: 15),
-                writingTypeCard("手寫字-掃描", "轻松掃描写作原稿纸",
+                writingTypeCard("手寫字-掃描", "一鍵掃描作文原稿紙",
                     'assets/icons/attribution-pen.svg', "scan", context),
                 const SizedBox(height: 15),
-                writingTypeCard("手寫字-選取本地文件", "選擇已掃描的本地文件",
+                writingTypeCard("手寫字-選取文件", "從手機上載已掃描的文件",
                     'assets/icons/attribution-pen.svg', "local-file", context),
               ]))
         ]));

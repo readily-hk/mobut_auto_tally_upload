@@ -5,6 +5,8 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
+import '../theme_constants.dart';
+
 class WebLocalFilePage extends StatefulWidget {
   String websiteLink;
   WebLocalFilePage(this.websiteLink, {Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class WebLocalFilePage extends StatefulWidget {
 }
 
 class _WebLocalFilePageState extends State<WebLocalFilePage> {
+  bool _isFormFillingPage = true;
   late final WebViewController controller;
 
   _WebLocalFilePageState();
@@ -22,6 +25,23 @@ class _WebLocalFilePageState extends State<WebLocalFilePage> {
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel(
+        'FlutterChannel',
+        onMessageReceived: (JavaScriptMessage message) {
+          if (message.message == 'newPageDetected') {
+            setState(() {
+              _isFormFillingPage = false;
+            });
+          }
+        },
+      )
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            _injectNewPageDetectionJS();
+          },
+        ),
+      )
       ..loadRequest(Uri.parse(widget.websiteLink + "?format=hand_writing"));
 
     //run below listener to overide webview's setonshowfileselector
@@ -29,6 +49,25 @@ class _WebLocalFilePageState extends State<WebLocalFilePage> {
     controller.clearCache();
     controller.clearLocalStorage();
     super.initState();
+  }
+
+  //determine whether the user submitted the form based on whether the submit button exist
+//if there is a submit button, then the user is still filling the form
+//if there isn't a submit button, then the user have submitted the form
+  void _injectNewPageDetectionJS() {
+    final jsCode = '''
+      function checkForNewPage() {
+        var submitButton = document.querySelector('button[type="submit"]');
+        if (!submitButton) {
+          FlutterChannel.postMessage('newPageDetected');
+        } else {
+          setTimeout(checkForNewPage, 500); // Check again after 500ms
+        }
+      }
+      checkForNewPage();
+    ''';
+
+    controller.runJavaScript(jsCode);
   }
 
   void addFileSelectionListener() async {
@@ -55,18 +94,27 @@ class _WebLocalFilePageState extends State<WebLocalFilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            controller.clearCache();
-            controller.clearLocalStorage();
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              controller.clearCache();
+              controller.clearLocalStorage();
 
-            Navigator.of(context).pop();
-          },
+              Navigator.of(context).pop();
+            },
+          ),
         ),
-      ),
-      body: WebViewWidget(controller: controller),
-    );
+        body: WebViewWidget(controller: controller),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _isFormFillingPage
+            ? null
+            : Stack(children: [
+                Positioned(
+                    bottom: 150,
+                    left: 70,
+                    right: 70,
+                    child: backToQrScannerButton(context))
+              ]));
   }
 }
