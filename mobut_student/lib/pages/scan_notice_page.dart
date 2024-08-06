@@ -32,7 +32,7 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                 SvgPicture.asset('assets/icons/square-info.svg',
                     width: 100, height: 100, color: const Color(0xFF11ad8f)),
                 const SizedBox(height: 10),
-                const Text("掃描前需知",
+                const Text("掃描前須知",
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 25),
@@ -61,7 +61,7 @@ class _ScanNoticePageState extends State<ScanNoticePage> {
                               style: new TextStyle(color: Colors.red)),
                           new TextSpan(
                               text:
-                                  '裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字'),
+                                  '請裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格字'),
                         ],
                       ),
                     )

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:file_picker/file_picker.dart';
+import '../javascript_webview.dart';
+import '../theme_constants.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 class WebPage extends StatefulWidget {
@@ -15,33 +17,42 @@ class WebPage extends StatefulWidget {
 
 class _WebPageState extends State<WebPage> {
   late final WebViewController controller;
-
-  _WebPageState();
+  bool _isFormFillingPage = true;
 
   @override
   void initState() {
+    super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel(
+        'FlutterChannel',
+        onMessageReceived: (JavaScriptMessage message) {
+          if (message.message == 'newPageDetected') {
+            setState(() {
+              _isFormFillingPage = false;
+            });
+          }
+        },
+      )
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            injectNewPageDetectionJS(controller);
+          },
+        ),
+      )
       ..loadRequest(Uri.parse(widget.websiteLink + "?format=computer"));
 
-    //run below listener to overide webview's setonshowfileselector
     addFileSelectionListener();
-    controller.clearCache();
-    controller.clearLocalStorage();
-    super.initState();
   }
 
   void addFileSelectionListener() async {
     if (Platform.isAndroid) {
-      //By casting controller.platform to AndroidWebViewController, you are accessing an Android-specific implementation of the webview controller that allows you to perform platform-specific actions or configurations related to the webview on Android devices.
       final androidController = controller.platform as AndroidWebViewController;
-
-      // setOnShowFileSelector: Sets the callback that is invoked when the client should show a file selector.
       await androidController.setOnShowFileSelector(_androidFilePicker);
     }
   }
 
-  //The FileSelectorParams object is a parameter that is passed automatically by the webview controller when invoking the file selection callback function. It contains information about the file selection event, such as accepted file types, multiple file selection support, etc.
   Future<List<String>> _androidFilePicker(FileSelectorParams params) async {
     final result = await FilePicker.platform.pickFiles();
 
@@ -55,18 +66,28 @@ class _WebPageState extends State<WebPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            controller.clearCache();
-            controller.clearLocalStorage();
-
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: WebViewWidget(controller: controller),
-    );
+        appBar: _isFormFillingPage
+            ? AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    controller.clearCache();
+                    controller.clearLocalStorage();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            : null,
+        body: WebViewWidget(controller: controller),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _isFormFillingPage
+            ? null
+            : Stack(children: [
+                Positioned(
+                    bottom: 150,
+                    left: 60,
+                    right: 60,
+                    child: backToQrScannerButton(context))
+              ]));
   }
 }

@@ -46,7 +46,7 @@ class _GeneratePdfPageState extends State<GeneratePdfPage> {
                             style: new TextStyle(color: Colors.red)),
                         new TextSpan(
                             text:
-                                '確保已裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格'),
+                                '請確保已裁去邊框以外的所有文字(包括學校名稱、學生名稱等一切非文章內容的資訊)，只留下邊框內的方格'),
                       ],
                     ),
                   ),
