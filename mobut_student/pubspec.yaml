@@ -1,5 +1,5 @@
-name: cunning_document_scanner_example
-description: Demonstrates how to use the cunning_document_scanner plugin.
+name: mobut_student
+description: For student to upload their writings
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

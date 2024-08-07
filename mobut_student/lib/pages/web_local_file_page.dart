@@ -91,7 +91,8 @@ class _WebLocalFilePageState extends State<WebLocalFilePage> {
             : null,
         body: WebViewWidget(controller: controller),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton:
-            _isFormFillingPage ? null : backToQrScannerButton(context));
+        floatingActionButton: Visibility(
+            visible: !_isFormFillingPage,
+            child: backToQrScannerButton(context)));
   }
 }

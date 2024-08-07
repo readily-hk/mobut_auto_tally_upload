@@ -1,4 +1,4 @@
-package biz.cunning.cunning_document_scanner_example
+package com.mo_but.student
 
 import io.flutter.embedding.android.FlutterActivity
 
